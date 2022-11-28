@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight = "7"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize = "15sp"
+            android:singleLine="false"
+            android:textColor = "#000000"
+            android:id = "@+id/decide_order_list"
+        />
+    </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:gravity="center"
+            android:textSize = "15sp"
+            android:text = "총 0 원"
+            android:textColor = "#000000"
+            android:id = "@+id/decide_order_price"
+        />
+
+</LinearLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context="com.example.oneday_cafe_pos.ManageOrderActivity"
+    android:keepScreenOn="true"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text = "주문 입력"
+        android:textColor = "#ffffff"
+        android:textSize="25sp"
+        android:paddingTop="7dp"
+        android:layout_marginBottom="7dp"
+    />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <ListView
+            android:id="@+id/menu_category"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:dividerHeight="1dp"
+            android:background="#9f9f9f9f"
+            />
+
+        <ListView
+            android:id="@+id/menu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:layout_marginLeft="5dp"
+            android:divider="#7f7f7f"
+            android:dividerHeight="1dp"
+            android:background="#9f9f9f9f"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight = "5"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id = "@+id/show_total_price"
+                android:text="총 0 원"
+                android:textSize = "20sp"
+                android:textColor = "#ffffff"
+                android:gravity="center"
+                />
+
+                <ListView
+                    android:id="@+id/order"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8.3"
+                    android:layout_marginLeft="5dp"
+                    android:divider="#7f7f7f"
+                    android:dividerHeight="1dp"
+                    android:background="#9f9f9f9f"
+                    />
+
+            <LinearLayout
+                android:layout_weight="0.7"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                >
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+                    android:text = "모두 지우기"
+                    android:id = "@+id/init_order"
+                />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+                    android:text = "주문완료"
+                    android:id = "@+id/decide_order"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

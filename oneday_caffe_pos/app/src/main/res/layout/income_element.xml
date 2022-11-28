@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    >
+
+    <TextView
+        android:id ="@+id/is_hot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text = "HOT"
+        android:textSize = "17sp"
+        android:textColor = "#ff0000"
+        android:layout_weight="0.7"
+        android:gravity="center"
+        />
+    <TextView
+        android:id ="@+id/drink_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text = "DrinkName"
+        android:textSize = "17sp"
+        android:textColor = "#ffffff"
+        android:layout_weight="1"
+        android:gravity="center"
+        />
+    <TextView
+        android:id ="@+id/sold_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text = "Count"
+        android:textSize = "17sp"
+        android:textColor = "#ffffff"
+        android:layout_weight="1"
+        android:gravity="center"
+        />
+    <TextView
+        android:id ="@+id/total_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text = "TotalPrice"
+        android:textSize = "17sp"
+        android:textColor = "#ffffff"
+        android:layout_weight="2"
+        android:gravity="center"
+        />
+
+</LinearLayout>

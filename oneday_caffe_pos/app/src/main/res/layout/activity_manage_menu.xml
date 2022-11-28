@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="horizontal"
+    tools:context="com.example.oneday_cafe_pos.ManageMenuActivity"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:layout_marginRight="5dp"
+        >
+
+        <Button
+            android:id="@+id/new_menu_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:text="새 메뉴 카테고리 추가" />
+
+        <ListView
+            android:id="@+id/category_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#9f9f9f9f"
+
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/new_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:text="메뉴 추가" />
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:divider="#7f7f7f"
+            android:dividerHeight="1dp"
+            android:background="#9f9f9f9f"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

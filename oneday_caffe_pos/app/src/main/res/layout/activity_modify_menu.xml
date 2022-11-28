@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="horizontal">
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="메뉴 수정"
+        android:textColor="#ffffff"
+        android:textSize="25sp" />
+
+
+    <ImageView
+        android:id="@+id/modify_menu_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:maxWidth="250dp"
+        android:maxHeight="250dp"
+        android:src = "@drawable/menu_default_img"
+        />
+
+    <Spinner
+        android:layout_marginTop="10dp"
+        android:id="@+id/change_category"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/change_menu_img"
+        android:layout_toRightOf="@id/modify_menu_img"
+        />
+
+
+
+    <TextView
+        android:id="@+id/modify_rel_menu_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/modify_menu_img"
+        android:text="메뉴 이름"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/modify_menu_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/modify_rel_menu_name"
+        android:layout_weight="4"
+        android:hint="메뉴 이름" />
+
+    <TextView
+        android:id="@+id/modify_rel_menu_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modify_rel_menu_name"
+        android:layout_marginLeft="47sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="6dp"
+        android:layout_toRightOf="@id/modify_menu_img"
+        android:text="가격"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modify_menu_name"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/modify_rel_menu_price"
+        >
+
+        <EditText
+            android:id="@+id/modify_menu_price2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint = "HOT"
+            android:inputType="number"
+            />
+
+        <EditText
+            android:id="@+id/modify_menu_price1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="ICE"
+            android:inputType="number"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/change_menu_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/modify_rel_menu_name"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/modify_menu_img"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        android:text="메뉴 이미지 변경" />
+
+    <Button
+        android:id="@+id/cancel_modify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modify_rel_menu_price"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="취소"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        />
+
+    <Button
+        android:id="@+id/modify_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modify_rel_menu_price"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@id/cancel_modify"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="변경"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        />
+
+
+
+
+</RelativeLayout>
