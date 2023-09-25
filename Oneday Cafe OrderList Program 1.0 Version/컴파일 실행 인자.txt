@@ -1,0 +1,3 @@
+javac -cp ".;./json-simple-1.1.1.jar" OrderList.java -encoding utf-8
+
+java -cp ".;./json-simple-1.1.1.jar" OrderList
