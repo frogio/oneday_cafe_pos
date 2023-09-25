@@ -12,3 +12,8 @@ Android 어플리케이션에서 주문을 입력받으면, 받은 주문의 음
 
 ## 개발 및 실행 환경
 Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (FE), Java 8.0 / Swing, Notepad++
+
+## 실행 모습
+![20230907_112619](https://github.com/frogio/oneday_cafe_pos/assets/12217092/0821170a-454a-42e9-89e6-4e86f3ba90c9)
+![20230907_112637](https://github.com/frogio/oneday_cafe_pos/assets/12217092/893f5e21-e597-4c58-b20f-a2c0a8a9db7c)
+![20230907_112644](https://github.com/frogio/oneday_cafe_pos/assets/12217092/60e24274-dc28-4167-b119-b0549207db3f)
