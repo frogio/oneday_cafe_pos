@@ -20,9 +20,9 @@ Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (F
 
 ## 버전 업데이트 내역
 
-1.0
+#### 1.0 Ver
 초기 버전
 
-1.1 
+#### 1.1 Ver
 클라이언트 애플리케이션과 서버 프로그램(OrderList) 통신간 인코딩이 통일되지 않아 글자가 깨지면서 발생하는 복합적인 버그 해결</br>
 OrderList 프로그램 UI 개선
