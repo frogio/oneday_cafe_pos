@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class DBManager extends SQLiteOpenHelper {
 
     private static DBManager dbm;
+
     private static final String DB_NAME = "cafeDB.db";
     private final static String CREATE_MENU_CATEGORY = "CREATE TABLE MENU_CATEGORY" +
                                                         "(cate_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -68,14 +69,15 @@ public class DBManager extends SQLiteOpenHelper {
 
     private final static String CALCULATION_MENU_INCOME =
             "SELECT " +
-                    "drinkName, " +
-                    "sold_count, " +
-                    "case when(is_hot==1) " +
-                        "then sold_count * d.price2 " +
-                        "else sold_count * d.price1 " +
-                    "end as price " +
-                    "FROM " +
+                    "drinkName, " +                                     // 음료 이름
+                    "sold_count, " +                                    // 판매 갯수
+                    "case when(is_hot==1) " +                           // 온도 여부에 따라 음료값이 달라짐.
+                        "then sold_count * d.price2 " +                 // 뜨거운 음료
+                        "else sold_count * d.price1 " +                 // 차가운 음료
+                    "end as price " +                                   // 온도 여부에 따른 가격을
+                    "FROM " +                                           // 중첩된 테이블로부터 가져온다.
                     "(SELECT sum(count) as sold_count, is_hot FROM SALE_RECORD rcd, DRINK d " +
+                    // 중첩된 테이블은 sold_count, is_hot 컬럼으로 이루어짐, 이를 SALE_RECORD, DRINK 테이블로부터 가져와 가공한다.
                     "WHERE rcd.date = ! " +
                     "AND rcd.is_hot = @ " +
                     "AND rcd.drink_id = d.drink_id " +
@@ -124,7 +126,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     public static DBManager _getInstance(Context context, SQLiteDatabase.CursorFactory cursorfactory, int version){
         if(dbm == null)
-                dbm = new DBManager(context,DB_NAME, cursorfactory, version);
+            dbm = new DBManager(context, DB_NAME, cursorfactory, version);
 
         return dbm;
     }
@@ -274,9 +276,15 @@ public class DBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        int pk;
-        cursor.moveToNext();
-        pk =  cursor.getInt(0);
+        //Log.i("Reader", "Drink Name : " + drinkName);
+
+        int pk = 0;
+        if ( cursor != null && cursor.moveToFirst()) {
+            pk = cursor.getInt(0);
+            cursor.close();
+        }
+        //else
+        //    Log.i("Reader", "cursor is " + (cursor == null));
 
         return pk;
     }
@@ -284,17 +292,21 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void isServeComplete(int _count, int _is_hot, int _drink_id, int _using_coupon)
     {
+
+        Log.i("Reader", "Function is Working?");
+
         SQLiteDatabase db = getWritableDatabase();
+
+
         String query = ADD_SALE_RECORD + _count + ", " +
                                             _is_hot + ", " +
                                             _drink_id + ", "+
                                             _using_coupon + ")";
 
-        //Log.i("Assembled Query",query);
-
+        //Log.i("Reader", "Query : " + query);
         db.execSQL(query);
         db.close();
-
+        //Log.i("Reader", "Success");
     }
 
     public ArrayList<Integer> getWholePK(){

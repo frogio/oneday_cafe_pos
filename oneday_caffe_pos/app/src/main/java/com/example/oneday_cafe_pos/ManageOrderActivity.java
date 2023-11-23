@@ -48,6 +48,7 @@ public class ManageOrderActivity extends Activity implements ListView.OnItemClic
     private ArrayList<String> categoryList;
     private ArrayList<MenuItem> menuList;
     private DBManager dbm;
+    private NetworkManager nm;
 
     // Dialog View
     private Button temperature;
@@ -76,7 +77,7 @@ public class ManageOrderActivity extends Activity implements ListView.OnItemClic
     private static final String ORDER_TOTAL_PRICE = "MENU_TOTAL_PRICE";
     private static final String ORDER_LIST = "MENU_ORDER_LIST";
 
-    private ArrayList<OrderedItem> orderList;
+    private ArrayList<OrderedItem> orderList;               // 현재 받고있는 주문 리스트
     private MenuOrderAdapter orderAdpater;
     private boolean isSelectedItem = false;                 // 주문 dialog창 중복실행 방지
     private boolean isPushBack = false;
@@ -188,6 +189,11 @@ public class ManageOrderActivity extends Activity implements ListView.OnItemClic
     private void Init() {
 
         dbm = DBManager._getInstance(this, null, 1);
+
+        if(NetworkManager.IsConnNetwork()) {
+            nm = NetworkManager._getInstance(this);
+            Toast.makeText(this,"PC와 연동 중...", Toast.LENGTH_SHORT).show();
+        }
 
         menuCategory = (ListView) findViewById(R.id.menu_category);
         menu = (ListView) findViewById(R.id.menu);
@@ -419,18 +425,41 @@ public class ManageOrderActivity extends Activity implements ListView.OnItemClic
                 dlg.setNegativeButton("예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         // 주문리스트 객체에서 주문 정보를 가져와 db에 기록한다.
-                        for(int i = 0; i < orderList.size(); i++) {
-                            int fk = dbm.getDrinkPKByName(orderList.get(i).getMenuName());
-                            dbm.isServeComplete(
-                                    orderList.get(i).getCupOfCount(),
-                                    orderList.get(i).getIsHot() ? 1 : 0,
-                                    fk,
-                                    orderList.get(i).getIsCoupon());
+
+
+                        // PC와 연동되지 않은 상태.
+                        if (nm.IsConnNetwork() == false) {                      // PC와 연동이 되지 않을 시, 바로 DB에 등록
+                            for (int i = 0; i < orderList.size(); i++) {
+                                int fk = dbm.getDrinkPKByName(orderList.get(i).getMenuName());
+                                dbm.isServeComplete(
+                                        orderList.get(i).getCupOfCount(),
+                                        orderList.get(i).getIsHot() ? 1 : 0,
+                                        fk,
+                                        orderList.get(i).getIsCoupon());
+                            }
+
+                            Toast.makeText(ManageOrderActivity.this, "주문 완료", Toast.LENGTH_SHORT).show();
                         }
 
-                        Toast.makeText(ManageOrderActivity.this, "주문 완료", Toast.LENGTH_SHORT).show();
+                        // PC와 연동 중일 때.
+                        else{
+                            JSONArray json = new JSONArray();
+                            try {
+                                for (int i = 0; i < orderList.size(); i++) {
+                                    //int fk = dbm.getDrinkPKByName(orderList.get(i).getMenuName());
+                                    json.put(new JSONObject(orderList.get(i).toJSONObj())); // toString으로 변환된 문자열을 그대로 jsonArray에 저장.
+                                } // for
+                            } // try
+                            catch(JSONException je){
+                                Log.e("JSONException", je.toString());
+                            } // catch JSONException
+                            nm.SendJSON(json.toString());
+                            // 만들어진 JSON을 String으로 변환하여 전송.
+
+                            Toast.makeText(ManageOrderActivity.this, "메뉴 전송 완료", Toast.LENGTH_SHORT).show();
+
+                        }
                         initTotalOrderPrice();
                     }
                 });

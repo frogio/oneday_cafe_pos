@@ -31,6 +31,15 @@ public class OrderedItem implements Parcelable {
                 '}';
     }
 
+    public String toJSONObj(){          // No Answer... so weird
+        return  '{' + "\"isHot\":" + isHot + ",\n" +
+                "\"cupOfCount\":" + cupOfCount + ",\n" +
+                "\"price\":" + price + ",\n" +
+                "\"menuName\":" + '\"' +  menuName + '\"' + ",\n" +
+                "\"orderMemo\":" + '\"' + orderMemo + '\"' + ",\n" +
+                "\"isCoupon\":" + isCoupon + '}';
+    }
+
     public OrderedItem(boolean _isHot, int _price, int _cupOfCount, String _menuName, String _orderMemo, int _isCoupon) {
         isHot = _isHot;
         cupOfCount = _cupOfCount;

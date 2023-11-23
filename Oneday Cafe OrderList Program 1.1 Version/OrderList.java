@@ -1,10 +1,12 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;									// ArrayList
+import java.nio.charset.StandardCharsets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;									// awt
 import javax.swing.*;								// swing
+
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -38,11 +40,11 @@ public class OrderList extends JFrame implements ActionListener{
 	
 	private JPanel orderListPanel;							// orderList의 최상부 Panel 
 	private JPanel orderCardBoardPanel;						// orderCard를 나열하는 Panel
-	private JLabel totalPrice;
+	//private JLabel totalPrice;
 	private JScrollPane cardBoardScrWrapper;				// cardBoard 스크롤 Wrapper
 	private JButton cancelOrder;							// 주문 취소
 	private JButton completeOrder;							// 주문 완료
-	private JLabel orderNo;									//  현재 panel에  띄워져 있는 Order의  번호
+	private JLabel orderNo;									// 현재 panel에  띄워져 있는 Order의  번호
 	
 	//private JPanel emptyPanel;
 	
@@ -59,6 +61,7 @@ public class OrderList extends JFrame implements ActionListener{
 	private ArrayList<Integer> 					noIdx;		// 주문번호와 인덱스의 관계를 나타냄(해쉬)
 	// 위 두 리스트는 동기화 되어야 함, 즉 noIdx에서 찾은 인덱스가 orderInfo내의 주문 객체를 올바르게 참조해야 함.
 	
+	//private int curOrderPrice					= 0;		// 현재 주문의 가격
 	private int orderIdx						= 0;		// 현재 보고있는 주문 묶음 인덱스
 	private int orderItemIdx					= 0;		// 주문 묶음 내 아이템 인덱스
 	private int curOrderNo						= 0;		// 현재 orderNo
@@ -102,7 +105,9 @@ public class OrderList extends JFrame implements ActionListener{
 			commuThread = new Thread(new CommSide());
 			commuThread.start();	
 			
-			writer = new PrintWriter(clientSock.getOutputStream());	
+			//writer = new PrintWriter(clientSock.getOutputStream(),);
+			writer = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream(), StandardCharsets.UTF_8), true);			
+																							// 통신 인코딩 방식을 UTF-8로 맞춘다!!!!! 필수!!!!
 			
 			setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 			
@@ -120,7 +125,7 @@ public class OrderList extends JFrame implements ActionListener{
 			cancelOrder = new JButton("주문 취소");
 			completeOrder = new JButton("주문 준비 완료");
 			orderNo = new JLabel();
-			totalPrice = new JLabel();
+			//totalPrice = new JLabel();
 			
 			cancelOrder.addActionListener(this);
 			completeOrder.addActionListener(this);
@@ -136,16 +141,16 @@ public class OrderList extends JFrame implements ActionListener{
 			buttonArea.add(BorderLayout.EAST, completeOrder);			
 			buttonArea.add(BorderLayout.CENTER, orderNo);
 			
-			Font totalPriceFont  = new Font(null, Font.BOLD, 20);
+			//Font totalPriceFont  = new Font(null, Font.BOLD, 20);
 			
 			cancelOrder.setMargin(new Insets(5,30,5,30));
 			completeOrder.setMargin(new Insets(5,30,5,30));
-			totalPrice.setHorizontalAlignment(JLabel.CENTER);
-			totalPrice.setFont(totalPriceFont);
+			//totalPrice.setHorizontalAlignment(JLabel.CENTER);
+			//totalPrice.setFont(totalPriceFont);
 			
 			orderListPanel.add(BorderLayout.CENTER, cardBoardScrWrapper);
 			orderListPanel.add(BorderLayout.SOUTH, buttonArea);
-			orderListPanel.add(BorderLayout.NORTH, totalPrice);
+			//orderListPanel.add(BorderLayout.NORTH, totalPrice);
 			
 			orderNoPanel = new JPanel();
 			orderNoPanel.setLayout(new BoxLayout(orderNoPanel, BoxLayout.Y_AXIS));		
@@ -217,7 +222,7 @@ public class OrderList extends JFrame implements ActionListener{
 	
 	}
 	
-	private /*synchronized*/ void UpdateOrderBoard(){										// 주문 보드 업데이트
+	private /*synchronized*/ void UpdateOrderBoard(){										// 주문 데이터 리스트 업데이트
 		
 		orderCardBoardPanel.removeAll();
 		orderNoPanel.removeAll();
@@ -225,29 +230,30 @@ public class OrderList extends JFrame implements ActionListener{
 		completeOrder.setEnabled(true);														// 주문 완료버튼은 처음엔 무조건 enable
 		
 		if(noIdx.isEmpty() == false){
-			
+		// 주문 번호 추가, 주문 번호 리스트(ArrayList)가 비어있지 않을 경우 업데이트함. (NULL Pointer 참조 방지)
+
 			for(int i = 0; i < noIdx.size(); i++){
 				JButton orderButton = new JButton("" + noIdx.get(i));
 				orderButton.setMargin(new Insets(20,100,20,100));							// 버튼 내부의 패딩.
 				orderNoPanel.add(orderButton);
 				orderButton.addActionListener(this);
 				
-				if(i == noIdx.size() - 1)
+				if(i == orderIdx)															// 현재 선택되어있는 번호를 하이라이팅
 					orderButton.setBackground(Color.yellow);
-					//orderButton.setForeground(Color.RED);
-				
-				
+			
 			}
-			orderNo.setText("주문 번호 : "  + noIdx.get(orderIdx ));
+			
+			//for(int i = 0; i < cardList.size(); i++)
+			//	price += cardList.get(i).getPrice();
 			
 		}
 		
 		if(orderInfo.isEmpty() == false){
-		// 주문 아이템 리스트 추가
-			ArrayList<OrderedItem> cardList = orderInfo.get(orderIdx);						// 현재 표시할 주문번호의 리스트, 가장 최신것
+		// 주문 아이템 리스트 추가, 아이템 리스트(ArrayList)가 비어있지 않을 경우 업데이트함. (NULL Pointer 참조 방지)
+			ArrayList<OrderedItem> cardList = orderInfo.get(orderIdx);						// 현재 표시할 주문번호의 리스트
 			orderCardBoardPanel.setLayout(new BoxLayout(orderCardBoardPanel, BoxLayout.Y_AXIS));
 			int price = 0;
-			
+
 			JPanel orderRibbon;
 			orderRibbon = new JPanel();
 			for(int i = 0; i < cardList.size(); i++){
@@ -271,15 +277,16 @@ public class OrderList extends JFrame implements ActionListener{
 					
 			}
 			
+			orderNo.setText("주문 번호 : " + noIdx.get(orderIdx) + " || " + price + " 원");
 			
-			totalPrice.setText(price + " 원");
-			
-			// GUI에 orderCard 삽입
+			//totalPrice.setText(price + " 원");
+			// 주문 데이터(ArrayList)를 업데이트 한 뒤,
+			// GUI Update
 			IsHasOrder(true);																// 주문이 존재하므로 OrderBoard를 보여줌
 		
 		}
 		else IsHasOrder(false);
-				
+		
 		revalidate();
 		repaint();
 		
@@ -313,7 +320,7 @@ public class OrderList extends JFrame implements ActionListener{
 			
 			for(int i = noIdx.get(0); i <= noIdx.get(noIdx.size() - 1); i++){				// 루프를 돌면서 클릭된 버튼을 찾는다.
 				
-				if(event.getActionCommand().equals("" + i))
+				if(event.getActionCommand().equals("" + i))									// 버튼의 이름으로 눌려진 버튼을 찾는다.
 					orderIdx = noIdx.indexOf(i);											// 현재 보여지는 주문번호의 인덱스를 찾는다.
 				
 			}	// for
@@ -371,20 +378,19 @@ public class OrderList extends JFrame implements ActionListener{
 			printLog(LOG_THREAD_SIDE, "thread is activate...");
 			
 			try{
-
-				InputStreamReader isReader = new InputStreamReader(clientSock.getInputStream(), "UTF-8");
-				reader = new BufferedReader(isReader);	
+				
+				InputStreamReader isReader = new InputStreamReader(clientSock.getInputStream(), "UTF-8");	// 통신 인코딩 방식을 UTF-8로 맞춘다!!!! 중요!!!!
+				reader = new BufferedReader(isReader);
 				
 				while(true){
-
-					String receivedText = "";
 					
+					String receivedText = "";
 					if(reader.ready()){														// 전송받은 데이터가 존재할 경우
 						receivedText = reader.readLine();
 						printLog(LOG_THREAD_SIDE,"received json from client...");
 						printLog(LOG_RECEIVED_MSG, receivedText);
 
-						if(receivedText.equals(INIT_CONN_CODE)){
+						if(receivedText.equals(INIT_CONN_CODE)){							// Init Code
 							printLog(LOG_THREAD_SIDE, "got a init code " + INIT_CONN_CODE);
 							continue;
 						}
@@ -392,10 +398,8 @@ public class OrderList extends JFrame implements ActionListener{
 						JSONParse(receivedText);
 					}
 					
-					if(isSendSomething){
+					if(isSendSomething){													// 보낼 것이 있을 경우
 
-						//printLog(LOG_THREAD_SIDE, "isWorking?");
-						
 						ArrayList<OrderedItem> feedbackList = orderInfo.get(orderIdx);
 						JSONArray json = new JSONArray();
 							
@@ -412,6 +416,7 @@ public class OrderList extends JFrame implements ActionListener{
 						writer.flush();
 						
 						printLog(LOG_SEND_MSG, json.toString());
+						//printLog("Test","isWorking?111");
 						
 						orderInfo.remove(orderIdx);
 						noIdx.remove(orderIdx);
@@ -421,7 +426,7 @@ public class OrderList extends JFrame implements ActionListener{
 						isSendSomething = false;						
 					}
 					
-					if(isUpdate){
+					if(isUpdate){															// Board를 업데이트할 내용이 있으면,
 						UpdateOrderBoard();
 						isUpdate=false;
 					}
