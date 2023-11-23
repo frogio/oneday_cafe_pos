@@ -1,4 +1,4 @@
-# Oneday cafe pos Ver 1.0
+# Oneday cafe pos Ver 1.1
 안양시 만안구 보건소 정신 재활센터의 프로그램인 원데이 카페를 위한 POS 어플리케이션
 
 ## 구성
@@ -17,3 +17,12 @@ Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (F
 ![20230907_112619](https://github.com/frogio/oneday_cafe_pos/assets/12217092/0821170a-454a-42e9-89e6-4e86f3ba90c9)
 ![20230907_112637](https://github.com/frogio/oneday_cafe_pos/assets/12217092/893f5e21-e597-4c58-b20f-a2c0a8a9db7c)
 ![20230907_112644](https://github.com/frogio/oneday_cafe_pos/assets/12217092/60e24274-dc28-4167-b119-b0549207db3f)
+
+## 버전 업데이트 내역
+
+1.0
+초기 버전
+
+1.1 
+클라이언트 애플리케이션과 서버 프로그램(OrderList) 통신간 인코딩이 통일되지 않아 글자가 깨지면서 발생하는 복합적인 버그 해결</br>
+OrderList 프로그램 UI 개선
