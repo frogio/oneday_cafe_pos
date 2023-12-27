@@ -82,7 +82,7 @@ public class ManageMenuActivity extends Activity implements View.OnClickListener
     }
 
     public void onClick(View v) {
-        if (v.getId() == R.id.new_menu_category) {
+        if (v.getId() == R.id.new_menu_category) {              // 새로운 메뉴 그룹 추가
             //Toast.makeText(this, "새로운 메뉴 카테고리", Toast.LENGTH_SHORT).show();
             catergoryAddWindow = View.inflate(this, R.layout.add_menu_category, null);
 
