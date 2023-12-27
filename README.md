@@ -1,4 +1,4 @@
-# Oneday cafe pos Ver 1.1
+# Oneday cafe pos Ver 1.11
 안양시 만안구 보건소 정신 재활센터의 프로그램인 원데이 카페를 위한 POS 어플리케이션
 
 ## 구성
@@ -29,3 +29,11 @@ Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (F
 글자가 깨지면서 발생하는 복합적인 버그 해결</br></li>
 <li>OrderList 프로그램 UI 개선</li>
 </ul>
+
+#### 1.11 Ver
+<ul>
+<li>OrderList 프로그램과 연동 중 애플리케이션이 포그라운드로 나간 상태가 2분간 지속되면</br>
+자동으로 프로그램과 연결 종료
+</li>
+</ul>
+
