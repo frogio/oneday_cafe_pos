@@ -32,7 +32,7 @@ Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (F
 
 #### 1.11 Ver
 <ul>
-<li>OrderList 프로그램과 연동 중 애플리케이션이 포그라운드로 나간 상태가 2분간 지속되면</br>
+<li>OrderList 프로그램과 연동 중 애플리케이션이 포그라운드에서 나간 상태가 2분간 지속되면</br>
 자동으로 프로그램과 연결 종료
 </li>
 </ul>
