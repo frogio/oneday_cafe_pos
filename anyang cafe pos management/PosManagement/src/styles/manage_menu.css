@@ -1,0 +1,33 @@
+.manage-menu{
+    display:flex;
+}
+
+.category-list{
+    width:30%;
+}
+
+.drink-list{
+    width:70%;
+}
+
+.add-category-btn{
+    width:100%;
+}
+
+/*------------------------------------- category-list -------------------------------------*/
+
+.item-btn-div{
+    display:flex;
+    justify-content:space-between;   
+}
+
+.delete-rename-btn{
+    font-size:0.7rem;
+    color:blue;
+}
+
+/*------------------------------------- category-list -------------------------------------*/
+
+.add-drink-btn{
+    width:100%;
+}

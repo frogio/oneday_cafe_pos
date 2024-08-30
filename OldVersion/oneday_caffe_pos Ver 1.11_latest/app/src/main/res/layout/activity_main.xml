@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="horizontal"
+    tools:context="com.example.oneday_cafe_pos.MainActivity">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/round_layout"
+        android:id = "@+id/mmg_menu"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:src="@drawable/mmg_menu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize = "20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="#000000"
+            android:text="메뉴 관리"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/round_layout"
+        android:layout_margin="10dp"
+        android:id = "@+id/cur_order"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:src="@drawable/cur_order_" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize = "20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="#000000"
+            android:text="주문 관리"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/round_layout"
+        android:layout_margin="10dp"
+        android:id = "@+id/calcul_income"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:src="@drawable/calcul_income_" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize = "20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="#000000"
+            android:text="정산"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/round_layout"
+        android:layout_margin="10dp"
+        android:id = "@+id/conn_network"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:src="@drawable/network_img" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize = "20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="#000000"
+            android:text="PC 연결"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        />
+
+</LinearLayout>
