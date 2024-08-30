@@ -28,6 +28,12 @@ Window 10, node.js, express.js, vue, vuetify, android kotlin
 
 ## 실행 모습
 
+![메뉴관리](https://github.com/user-attachments/assets/e4e15fb7-51e5-456a-b7aa-e30fd17d1600)
+![주문관리](https://github.com/user-attachments/assets/14b613de-7c4f-46fb-b99b-a195ac5050d5)
+![정산](https://github.com/user-attachments/assets/3fd94290-b403-48d7-bec7-93c4e3b9973e)
+![주문](https://github.com/user-attachments/assets/396bbbb2-d38d-4e07-a789-f8c46b67464b)
+
+
 
 ## 버전 업데이트 내역
 
