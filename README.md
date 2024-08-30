@@ -1,4 +1,40 @@
-# Oneday cafe pos Ver 1.11
+# aNyang Cafe Pos
+안양시 만안구 보건소 정신 재활센터의 프로그램인 내맘아냥 카페를 위한 POS 어플리케이션
+
+## 사용 기술
+DB 			: MariaDB
+Back-end 	: node js, express js(http, webSocket Trasnsmission)
+Front-end	: Vue.js, Vuetify, kotlin
+
+## 구성
+
+### 1. aNyang Cafe Pos Server application
+express js와 node js 기반 서버, Front-end 애플리케이션과 DB 컨트롤을 지원함
+
+### 2. aNyang Cafe Pos Client application
+Vue.js와 Vuetify 기반으로 제작된 클라이언트
+
+#### 2 - 1. aNyang Cafe Pos Client
+서버로 부터 음료 정보를 받아온 후, 사용자로부터 주문을 받는 애플리케이션, 서버와 WebSocket을 통해 실시간으로 주문 정보를 주고받음.
+kotlin으로 만들어진 WebView 안드로이드 어플리케이션으로 래핑되어 제공됨. 
+
+
+#### 2 - 1. aNyang Cafe Pos Management
+서버와 통신하며 음료 정보, 주문정보, 정산 기능을 수행하는 애플리케이션, 주로 http통신을 통해 서버와 통신한다.
+주문 정보에선 Pos Client가 주문을 받으면 받은 주문을 서버로 부터 WebSocket으로 받아와 사용자에게 띄워준다.
+
+## 개발 및 실행 환경
+Window 10, node.js, express.js, vue, vuetify, android kotlin
+
+## 실행 모습
+
+
+## 버전 업데이트 내역
+
+#### 1.0 Ver
+초기 버전
+
+# Oneday cafe pos Ver 1.11 (구버전)
 안양시 만안구 보건소 정신 재활센터의 프로그램인 원데이 카페를 위한 POS 어플리케이션
 
 ## 구성
@@ -33,7 +69,6 @@ Window 10, Ubuntu 16.02, Android(Java), Android Studio, Samsung Galaxy Tab S7 (F
 #### 1.11 Ver
 <ul>
 <li>OrderList 프로그램과 연동 중 애플리케이션이 포그라운드에서 나간 상태가 2분간 지속되면</br>
-자동으로 OrderList 프로그램과 연결 종료
+자동으로 프로그램과 연결 종료
 </li>
 </ul>
-
