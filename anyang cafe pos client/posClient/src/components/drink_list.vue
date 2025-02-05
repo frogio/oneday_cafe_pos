@@ -84,6 +84,7 @@ export default{
         },
         GetDrink(drink){
             this.$emit("get-drink", drink);
+            //console.log(drink);
         }
     },
     async created(){

@@ -10,6 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import manage_meun from '../views/manage_menu.vue'
 import manage_order from '../views/manage_order.vue'
 import sale_record from '../views/sale_record.vue'
+import modify_record from '../views/modify_record.vue'
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     name:'정산',
     component:sale_record
   },
+  {
+    path:'/modifyRecord',
+    name:'정산 정정',
+    component:modify_record,
+  }
 ]
 
 

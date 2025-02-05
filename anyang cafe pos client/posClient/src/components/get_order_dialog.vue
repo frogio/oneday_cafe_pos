@@ -54,6 +54,9 @@
             <v-btn class = "drink-opt" @click="SelectDrinkOpt('연하게')"
                 :class="{'selected-opt': drinkOpt.includes('연하게') }"
             >연하게</v-btn>
+            <v-btn class = "drink-opt" @click="SelectDrinkOpt('샷 빼기')"
+                :class="{'selected-opt': drinkOpt.includes('샷 빼기') }"
+            >샷 빼기</v-btn>
         </div>
 
         <div class="drink-opt-div"> 
@@ -178,7 +181,10 @@ export default{
     watch:{
         itemInfo(item){
             this.cupCount = 1;
-            this.isHot = false;
+            if(item.itemInfo.icePrice == 0)            // icePrice가 0면 Hot Only이므로,
+                this.isHot = true;                     // isHot은 true
+            else                                       // 그렇지 않을 경우
+                this.isHot = false;                    // 기본은 false  (2024-11-07 Hot only 버그 수정)
             this.selectedPayOpt = [];
 
             if(item.itemInfo.icePrice == 0)            // Hot Only 음료일 경우

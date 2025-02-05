@@ -8,8 +8,7 @@
         <div
             class="record">
             <RecordList
-                :record="records"
-            >
+                :record="records">
             </RecordList>
         </div>
     </div>
