@@ -1,7 +1,7 @@
 <template>
     <div
         class="total-price"
-    >총 {{ totalPrice }}원</div>
+    >총 {{ totalPrice }}원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ totalCupCount }}잔</div>
 
     <div style="height:100vh;" id="record-list" class="record-list">
         <div class="scroll-list" ref="list">
@@ -58,7 +58,8 @@ export default{
     data(){
         return{
             recordList:this.record,
-            totalPrice:0
+            totalPrice:0,
+            totalCupCount:0,
         }
     },
     watch:{
@@ -75,8 +76,12 @@ export default{
     methods:{
         GetTotalPrice(){
                 this.totalPrice = 0;
+                this.totalCupCount = 0;
+                console.log(this.recordList);
+
                 for(let i = 0; i < this.recordList.length; i++){
-                    if(this.recordList[i].price == "-1")
+                    this.totalCupCount += parseInt(this.recordList[i].count);
+                    if(this.recordList[i].price == "-1")                // -1은 쿠폰
                         continue;
                     else
                         this.totalPrice += parseInt(this.recordList[i].price);

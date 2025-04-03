@@ -4,8 +4,8 @@ const WebSocket = require('ws');
 
 const app = express();
 const cors = require('cors');
-const ip = "_ip";
-const port = "_port";
+const ip = "";
+const port = "";
 const pool = require('./DBManager');
 const path = require('path');
 
