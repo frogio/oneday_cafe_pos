@@ -2,14 +2,14 @@
     <div
         class="total-price"
     >총 {{ totalPrice }}원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ totalCupCount }}잔</div>
-
+<!-- " -->
     <div style="height:100vh;" id="record-list" class="record-list">
         <div class="scroll-list" ref="list">
 
             <v-list lines="one" v-if="recordList != null && recordList.length > 0">
                 <v-list-item class ="scroll-list-item"
                     v-for="(record, index) in recordList">
-                    <v-card class="prevent-drag item" :key="index" :class="{'switching-background': index % 2 == 1 }">
+                    <v-card class="prevent-drag item" :key="record.id" :class="{'switching-background': index % 2 == 1 }">
                         <RecordCard
                             :record = "record"
                         ></RecordCard>
@@ -43,12 +43,14 @@
         justify-content:center;
         align-items:center;
         height:40px;
+        background:#000000!important;
+        color:#ffffff;
     }
 
 </style>
 
 <script>
-
+import { v4 as uuidv4 } from 'uuid';
 import RecordCard from './record-card.vue';
 
 export default{
@@ -65,6 +67,10 @@ export default{
     watch:{
         record(rec){
             this.recordList = rec;
+            for(let i = 0; i < this.recordList.length; i++)
+                this.recordList[i].id = uuidv4();
+            
+            console.log(this.recordList);
             this.GetTotalPrice();
         }
     },

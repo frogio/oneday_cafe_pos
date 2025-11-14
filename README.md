@@ -49,6 +49,9 @@ Window 10, node.js, express.js, vue, vuetify, android kotlin
 #### 1.12 Ver
 정산에서 총 판매 잔수 추가
 
+#### 1.2 Ver
+날짜 범위 기준으로 정산목록을 확인하는 기능 추가
+
 # Oneday cafe pos Ver 1.11 (구버전)
 안양시 만안구 보건소 정신 재활센터의 프로그램인 원데이 카페를 위한 POS 어플리케이션
 

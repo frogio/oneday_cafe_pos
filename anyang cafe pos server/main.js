@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 const app = express();
 const cors = require('cors');
 const ip = "";
-const port = "";
+const port = ;
 const pool = require('./DBManager');
 const path = require('path');
 
@@ -701,7 +701,7 @@ const QUERY_DRINK_SALE_RECORD = `SELECT
 									end as price
 									FROM
 										(SELECT sum(count) as count, isHot, rcd.payOption FROM SALE_RECORD rcd, DRINK d
-											WHERE rcd.date = \"_date\"
+											WHERE STR_TO_DATE(rcd.date, '%Y-%m-%d') BETWEEN STR_TO_DATE(\"_startDate\", '%Y-%m-%d') AND STR_TO_DATE(\"_endDate\", '%Y-%m-%d')
 											AND rcd.isHot = _isHot
 											AND rcd.FK_DRINK_recordID = d.drinkID
 											AND rcd.FK_DRINK_recordID = _drinkID
@@ -710,9 +710,9 @@ const QUERY_DRINK_SALE_RECORD = `SELECT
 const QUERY_GET_ALL_DRINK_PK = "SELECT drinkID FROM drink";
 
 app.post('/getSaleRecord',async(req,res) =>{
-	const { date } = req.body;
+	const { startDate, endDate } = req.body;
 	
-	console.log("get sale record on " + date);
+	console.log(`get sale record on ${startDate} ~ ${endDate}`);
 	
 	let conn;
 	
@@ -732,7 +732,8 @@ app.post('/getSaleRecord',async(req,res) =>{
 		for(let isHot = 0; isHot < 2; isHot++){
 			for(let payOpt = 0; payOpt < 4; payOpt++){
 				let query = QUERY_DRINK_SALE_RECORD;
-				query = query.replace("_date", date);
+				query = query.replace("_startDate", startDate);
+				query = query.replace("_endDate", endDate);
 				query = query.replace("_isHot", "" + isHot);
 				
 				let optQuery = query;
@@ -793,6 +794,8 @@ app.post('/getSaleRecord',async(req,res) =>{
 	
 		records = records.filter(record => record.price != null);
 		res.json(records);
+		//console.log(records);
+		
 		
 	}catch(err){
 		console.log("error occured while connect");
@@ -801,4 +804,92 @@ app.post('/getSaleRecord',async(req,res) =>{
 	}finally{
 		if(conn) conn.release();	
 	}
+});
+
+
+//const QUERY_GET_SALE_RECORD = "SELECT * FROM SALE_RECORD WHERE date = \"_date\"";
+const QUERY_GET_RAW_SALE_RECORD = `SELECT 
+		rec.saleID,
+		rec.count,
+		rec.payOption,
+		rec.isHot,
+		d.drinkName,
+		CAST((case 
+			when(rec.payOption LIKE "%coupon%")
+				then -1
+				
+			when(isHot=1)
+				then if (rec.payOption LIKE "%tumblr%",
+					count * (d.hotPrice - 500),		/*if*/
+					count * d.hotPrice)				/*else*/
+			
+			when(isHot=0)
+				then if (rec.payOption LIKE "%tumblr%",
+					count * (d.icePrice - 500),		/*if*/
+					count * d.icePrice)				/*else*/
+			END) AS CHAR) as price
+		FROM SALE_RECORD rec,
+		DRINK d
+		WHERE
+		DATE = \"_date\" AND
+		rec.FK_DRINK_recordID = d.drinkID
+		ORDER BY saleID DESC`
+
+const QUERY_DELETE_SALE_RECORD = "delete from SALE_RECORD WHERE saleID = _saleID";
+
+app.post('/getRawSaleRecord',async(req,res) =>{
+	const { date } = req.body;
+	
+	let conn;
+	
+	try{
+		
+		console.log("try to connect to db...");
+		conn = await pool.getConnection();
+		console.log("connection success...");
+		
+		let query = QUERY_GET_RAW_SALE_RECORD;
+		query = query.replace("_date", date);
+		console.log("Execute query " + query);
+		const result = await conn.query(query);
+
+		//console.log(result);
+		res.json(result);
+		
+	}catch(err){
+		console.log("error occured while connect");
+		console.log("error message : " + err);
+		
+	}finally{
+		if(conn) conn.release();	
+	}
+	
+});
+
+app.post('/deleteRecord', async(req,res) =>{
+	const { saleID } = req.body;
+	
+	let conn;
+	
+	try{
+		
+		console.log("try to connect to db...");
+		conn = await pool.getConnection();
+		console.log("connection success...");
+		
+		let query = QUERY_DELETE_SALE_RECORD;
+		query = query.replace("_saleID", saleID);
+		console.log("Execute query " + query);
+		const result = await conn.query(query);
+
+		res.send("OK");
+		
+	}catch(err){
+		console.log("error occured while connect");
+		console.log("error message : " + err);
+		
+	}finally{
+		if(conn) conn.release();	
+	}	
+	
 });

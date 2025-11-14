@@ -1,12 +1,33 @@
 <template>
-    <div
-        class="record-table">
-        <v-date-picker
-            class = "date-picker"
-            v-model="date">
-        </v-date-picker>
-        <div
-            class="record">
+    <div class="record-table">
+        <div class="date-picker">
+            <v-row class="date-align" dense>
+                <v-col cols="12" md="3">
+                    <v-date-input
+                        label="시작일 선택"
+                        prepend-icon=""
+                        prepend-inner-icon="$calendar"
+                        variant="solo"
+                        v-model="startDate"
+                        ></v-date-input>
+                </v-col>
+                <v-col cols="12" md="3">
+                    <v-date-input
+                        label="종료일 선택"
+                        prepend-icon=""
+                        prepend-inner-icon="$calendar"
+                        variant="solo"
+                        v-model="endDate"
+                    ></v-date-input>
+                        <!--  -->
+                </v-col>
+                <v-btn @click="GetRecord">
+                    조회
+                </v-btn>
+            </v-row>
+        </div>
+        {{ testDate }}
+        <div class="record">
             <RecordList
                 :record="records">
             </RecordList>
@@ -17,17 +38,25 @@
 </template>
 
 <style>
-    .record-table{
-        width:130%;
-        height:100%;
+    .date-picker{
         display:flex;
+        flex-grow: 1;
+    }
+    .date-align{
+        align-items: center;
+        justify-content: center;
     }
 
-    .date-picker{
-        width:35%;
+    .record-table{
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        flex-grow: 3;
     }
+
     .record{
-        width:65%;
+        width:100%;
     }
 
 </style>
@@ -40,37 +69,30 @@ import RecordList from '../components/sale_record/record-list.vue';
         components:{
             RecordList,
         },
-        watch:{
-            date(date){
-                let month = "" + (date.getMonth() + 1);
-
-                if(month.length < 2)
-                    month = "0" + (date.getMonth() + 1);
-                
-                let _date = "" + date.getDate();
-
-                if(_date.length < 2)
-                    _date = "0" + date.getDate();
-
-                this.selectedDate = date.getFullYear() + '-' + month + '-' + _date;
-                this.GetRecord();
-            },
-
-        },
         data(){
             return{
                 saleRecordURL:"http://" + this.$store.state.IPAndPort + "/getSaleRecord",
-                date:new Date(),
-                selectedDate:"",
+                startDate:new Date(),
+                endDate:new Date(),
                 records:null,
+                testDate:"",
             }
 
         },
         methods:{
-            async GetRecord(){    
+            async GetRecord(){
+                if(this.startDate.getTime() > this.endDate.getTime()){
+                    alert("잘못된 날짜 범위입니다!");
+                    return;
+                }
+
+                const startDate = this.customDateFormat(this.startDate);
+                const endDate = this.customDateFormat(this.endDate);
+                
                 try{
                     const payload = {
-                        date:this.selectedDate,
+                        startDate:startDate,
+                        endDate:endDate
                     }
 
                     const response = await fetch(this.saleRecordURL,{
@@ -93,19 +115,19 @@ import RecordList from '../components/sale_record/record-list.vue';
             },
 
 
+            customDateFormat(date){
+                if (!date) return '';
+                
+                // Date 객체를 받아서 원하는 문자열로 변환
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                
+                return `${year}-${month}-${day}`;
+            }
+
         },
         mounted(){
-            let month = "" + (this.date.getMonth() + 1);
-            
-            if(month.length < 2)
-                month = "0" + (this.date.getMonth() + 1);
-
-            let date = "" + this.date.getDate();
-
-            if(date.length < 2)
-                date = "0" + this.date.getDate();
-
-            this.selectedDate = this.date.getFullYear() + '-' + month + '-' + date;
             this.GetRecord();
         },
 
