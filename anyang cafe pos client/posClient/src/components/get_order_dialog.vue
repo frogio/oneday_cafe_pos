@@ -1,74 +1,96 @@
 <template>
 
-    <v-dialog v-model="getOrderDialog" max-width="400px" @click:outside="getOrderDialog = false">
-       <v-card>
+    <v-dialog v-model="getOrderDialog" :width="computedDialogWidth" max-width="800px" @click:outside="getOrderDialog = false">
+       <v-card >
         <v-card-title class="headline">{{ drinkInfo.drinkName }} 추가</v-card-title>
         <v-divider></v-divider>        
-        <div class="cup-count">
-            <v-btn class="inc-dec-btn circle-btn" @click="CupCount(-1)" :disabled="isCouponSelected">
-                -
-            </v-btn>
+        <div class="dialog-direction">
+            <div>
+                <div class="cup-count">
+                    <v-btn class="inc-dec-btn circle-btn" @click="CupCount(-1)" :disabled="isCouponSelected">
+                        -
+                    </v-btn>
+                        
+                    <p v-if="isCouponSelected" class="align">1 잔</p>
+                    <p v-else class="align">{{ cupCount }} 잔</p>  
+                                
+                    <v-btn class="inc-dec-btn circle-btn" @click="CupCount(1)" :disabled="isCouponSelected">
+                        +
+                    </v-btn>
+                </div>
+
+                <div class="temperature-div" v-if="drinkInfo.icePrice != 0 && drinkInfo.hotPrice != 0">
+                    <v-btn @click="SwitchTemperature('ice')" class="temperature-opt ice-btn" :disabled="isHot == false">
+                        Ice
+                    </v-btn>
+
+                    <v-btn @click="SwitchTemperature('hot')" class="temperature-opt hot-btn" :disabled="isHot">
+                        Hot
+                    </v-btn>
+
+                </div>
+                <div class="temperature-div" v-if="drinkInfo.icePrice == 0">
+                    Hot Only 
+                </div>
+                <div class="temperature-div" v-if="drinkInfo.hotPrice == 0">
+                    Ice Only
+                </div>
                 
-            <p v-if="isCouponSelected" class="align">1 잔</p>
-            <p v-else class="align">{{ cupCount }} 잔</p>  
-                          
-            <v-btn class="inc-dec-btn circle-btn" @click="CupCount(1)" :disabled="isCouponSelected">
-                +
-            </v-btn>
-        </div>
+                <v-card-text class="pay-opt-padding">
+                    <div class="pay-opt">
+                        <v-checkbox
+                            v-for="option in payOpt"
+                            :key="option.value"
+                            :label="option.label"
+                            :value="option.value"
+                            v-model="selectedPayOpt"
+                            @change="CheckTumblrOpt"
+                        ></v-checkbox>  
+                    </div>
+                </v-card-text>
+                <div class="drink-opt-div">
+                    <v-btn class = "drink-opt" @click="SelectDrinkOpt('진하게')"
+                        :class="{'selected-opt': drinkOpt.includes('진하게') }"
+                    >진하게</v-btn>
+                    <v-btn class = "drink-opt" @click="SelectDrinkOpt('연하게')"
+                        :class="{'selected-opt': drinkOpt.includes('연하게') }"
+                    >연하게</v-btn>
+                    <v-btn class = "drink-opt" @click="SelectDrinkOpt('샷 빼기')"
+                        :class="{'selected-opt': drinkOpt.includes('샷 빼기') }"
+                    >샷 빼기</v-btn>
+                </div>
 
-        <div class="temperature-div" v-if="drinkInfo.icePrice != 0 && drinkInfo.hotPrice != 0">
-            <v-btn @click="SwitchTemperature('ice')" class="temperature-opt ice-btn" :disabled="isHot == false">
-                Ice
-            </v-btn>
+                <div class="drink-opt-div"> 
+                    <p v-if="drinkOpt.length > 0">{{ selectedOpt }}</p>
+                    <p v-else>선택된 옵션 없음</p>
+                </div>
 
-            <v-btn @click="SwitchTemperature('hot')" class="temperature-opt hot-btn" :disabled="isHot">
-                Hot
-            </v-btn>
-
-        </div>
-        <div class="temperature-div" v-if="drinkInfo.icePrice == 0">
-            Hot Only 
-        </div>
-        <div class="temperature-div" v-if="drinkInfo.hotPrice == 0">
-            Ice Only
-        </div>
-        
-        <v-card-text class="pay-opt-padding">
-            <div class="pay-opt">
-                <v-checkbox
-                 v-for="option in payOpt"
-                 :key="option.value"
-                 :label="option.label"
-                 :value="option.value"
-                 v-model="selectedPayOpt"
-                 @change="CheckTumblrOpt"
-               ></v-checkbox>  
+                <div class="price-div">
+                    <div class="price-div-child">
+                    <v-btn @click="isCash = !isCash">
+                        <p v-if=isCash>현금결제</p>
+                        <p v-else>계좌이체</p>
+                    </v-btn>
+                    </div>
+                    <div class="price-div-child"></div>
+                        <p v-if="isCouponSelected">0 원</p>
+                        <p v-else>{{ price }} 원</p>
+                    </div>
+                </div>
             </div>
-        </v-card-text>
+            <!-- 메모 -->
+            <!--
+            <div v-if="openMemo"
+                :key="openMemo"
+                class="memo-container">
+                
+                <VueSignaturePad 
+                    width="400px"
+                    height="400px"
+                />
 
-        <div class="drink-opt-div">
-            <v-btn class = "drink-opt" @click="SelectDrinkOpt('진하게')"
-                :class="{'selected-opt': drinkOpt.includes('진하게') }"
-            >진하게</v-btn>
-            <v-btn class = "drink-opt" @click="SelectDrinkOpt('연하게')"
-                :class="{'selected-opt': drinkOpt.includes('연하게') }"
-            >연하게</v-btn>
-            <v-btn class = "drink-opt" @click="SelectDrinkOpt('샷 빼기')"
-                :class="{'selected-opt': drinkOpt.includes('샷 빼기') }"
-            >샷 빼기</v-btn>
-        </div>
-
-        <div class="drink-opt-div"> 
-            <p v-if="drinkOpt.length > 0">{{ selectedOpt }}</p>
-            <p v-else>선택된 옵션 없음</p>
-        </div>
-
-        <div class="price-div">
-            <p v-if="isCouponSelected">0 원</p>
-            <p v-else>{{ price }} 원</p>
-        </div>
-        <!-- 메모 -->
+            </div>
+        -->
 
         <v-card-actions>
             <v-spacer></v-spacer>
@@ -109,7 +131,7 @@
     min-height:0px!important;
 }
 
-.pay-opt-padding:{
+.pay-opt-padding{
     padding: 0!important;
 }
 
@@ -170,7 +192,23 @@
     display:flex;
     width:100%;
     justify-content: center;
+    align-items: center;
     font-size:2rem;
+}
+
+.price-div-child{
+    flex:1;
+}
+
+.dialog-direction{
+    display:flex;
+    flex-direction: row!important;
+    justify-content: center;
+}
+
+.memo-container{
+    border:2px solid #000000; 
+    margin-left: 20px;
 }
 
 </style>
@@ -185,7 +223,9 @@ export default{
                 this.isHot = true;                     // isHot은 true
             else                                       // 그렇지 않을 경우
                 this.isHot = false;                    // 기본은 false  (2024-11-07 Hot only 버그 수정)
+
             this.selectedPayOpt = [];
+            this.isCash = true;
 
             if(item.itemInfo.icePrice == 0)            // Hot Only 음료일 경우
                 this.price = item.itemInfo.hotPrice;
@@ -214,16 +254,20 @@ export default{
             
             cupCount:1,
             isHot:false,
+            isCash:true,
 
-            selectedPayOpt:[],
             payOpt: [
             { label: '텀블러', value: 'tumblr' },
             { label: '쿠폰', value: 'coupon' },
+            { label: '샷', value:"shot" },
+            { label: '시럽', value: "syrup" }
             ],
+            selectedPayOpt:[],
             drinkOpt:[],
             selectedOpt:"",
+            price:0,
 
-            price:0
+            dialogWidth:400,
         }
     },
     methods:{
@@ -259,7 +303,8 @@ export default{
                 isHot:this.isHot,
                 payOpt:this.selectedPayOpt,
                 price:this.price,
-                drinkOpt:this.selectedOpt
+                drinkOpt:this.selectedOpt,
+                isCash:this.isCash
             }
 
             this.getOrderDialog = false;
@@ -280,6 +325,11 @@ export default{
                 else
                     this.price = this.drinkInfo.icePrice * this.cupCount;
             }
+            if(this.selectedPayOpt.includes('shot'))
+                this.price += 500 * this.cupCount;
+
+            if(this.selectedPayOpt.includes('syrup'))
+                this.price += 500 * this.cupCount;
         },
         SelectDrinkOpt(opt){
             
@@ -300,8 +350,12 @@ export default{
     computed:{
         isCouponSelected(){
             return this.selectedPayOpt.includes('coupon');
+        },
+        computedDialogWidth() {
+            return this.openMemo ? '800px' : '400px';
         }
-    },
+
+    }
 }
 
 </script>

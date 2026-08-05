@@ -107,7 +107,10 @@ export default{
             //{ "drinkName": "라떼는 말야!", "cupCount": 1, "isHot": false, "payOpt": [], "price": 2000, "completed": false }
             this.cardMsg += (this.orderInfo.payOpt.includes("tumblr") ? "텀블러 " : "")
                             + ((this.orderInfo.isHot) ? "Hot " : "Ice ")
-                            + this.orderInfo.drinkName + " ";
+                            + this.orderInfo.drinkName 
+                            + (this.orderInfo.payOpt.includes("shot") ? "(샷 추가) " : "")
+                            + (this.orderInfo.payOpt.includes("syrup") ? "(시럽 추가) " : "")
+                            + " ";
         },
         CompletedDrink(){
             this.orderInfo.completed = !this.orderInfo.completed;
@@ -126,6 +129,7 @@ export default{
     },
 
     mounted(){
+        console.log(this.order);
         this.CardMsg();
     },
     computed:{

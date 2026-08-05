@@ -58,11 +58,6 @@ export default{
                     throw new Error("POST Transmission failed while add new category...");
                 else
                     this.records = await response.json();
-                    for(let i = 0; i < this.records.length; i++){
-                        //console.log(this.records[i]);
-                        if(this.records[i].payOption.includes("tumblr"))
-                            this.records[i].drinkName = "텀블러 " + this.records[i].drinkName;
-                    }
                     this.records.sort((a, b) => {
                         return a.drinkName.localeCompare(b.drinkName);
                     });

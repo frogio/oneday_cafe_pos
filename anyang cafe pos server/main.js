@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 const app = express();
 const cors = require('cors');
 const ip = "";
-const port = ;
+const port = 5000;
 const pool = require('./DBManager');
 const path = require('path');
 
@@ -601,7 +601,7 @@ app.post('/updateDrink', async(req, res) =>{
 | FK_DRINK_recordID | int(11)     | YES  | MUL | NULL    |                |
 +-------------------+-------------+------+-----+---------+----------------+*/
 
-const QUERY_INSERT_SALE_RECORD = "INSERT INTO SALE_RECORD VALUES(null, \"_date\", _count, _isHot, \"_payOption\", _FK_DRINK_ID)";
+const QUERY_INSERT_SALE_RECORD = "INSERT INTO SALE_RECORD VALUES(null, \"_date\", _count, _isHot, \"_payOption\", _payType, _FK_DRINK_ID)";
 const QUERY_GET_DRINK_PK = "SELECT drinkID FROM DRINK WHERE FK_MENU_CATEGORY_cateID != 0 AND drinkName = \"_drinkName\"";
 
 app.post('/completeOrder',async(req,res) =>{
@@ -638,7 +638,10 @@ app.post('/completeOrder',async(req,res) =>{
 			console.log("cupCount : " + orderList[i].cupCount);
 			console.log("price : " + orderList[i].price);
 			console.log("isHot : " + orderList[i].isHot );
+			console.log("isCash : " + orderList[i].isCash );
 			console.log("payOpt : " );
+			
+			orderList[i].payOpt.sort();
 			
 			let payOpt = "";
 			
@@ -646,14 +649,14 @@ app.post('/completeOrder',async(req,res) =>{
 				console.log(" " + orderList[i].payOpt[k]);
 				payOpt += orderList[i].payOpt[k] + " ";
 			}
-	
-			let query = QUERY_INSERT_SALE_RECORD;
+			
+			let query = QUERY_INSERT_SALE_RECORD;	
 			
 			query = query.replace("_date", today);
 			query = query.replace("_count", orderList[i].cupCount);
 			query = query.replace("_isHot", (orderList[i].isHot) ? 1 : 0);
 			query = query.replace("_payOption", payOpt);
-			//query = query.
+			query = query.replace("_payType", (orderList[i].isCash) ? 0 : 1);		// 0이 현금결제, 1이 계좌이체
 			
 			let getPKQuery = QUERY_GET_DRINK_PK;
 			getPKQuery = getPKQuery.replace("_drinkName", orderList[i].drinkName);
@@ -680,32 +683,32 @@ app.post('/completeOrder',async(req,res) =>{
 });
 
 
+
 const QUERY_DRINK_SALE_RECORD = `SELECT
 									e.isHot,
 									drinkName,
+									e.payOption,
+									e.payType,
 									count,
-									case 
-									when(e.payOption LIKE \"%coupon%\")
-										then -1
-										
-									when(isHot=1)
-										then if (e.payOption LIKE \"%tumblr%\",
-											count * (d.hotPrice - 500),		/*if*/
-											count * d.hotPrice)				/*else*/
-									
-									when(isHot=0)
-										then if (e.payOption LIKE \"%tumblr%\",
-											count * (d.icePrice - 500),		/*if*/
-											count * d.icePrice)				/*else*/
-									
-									end as price
+									(CASE 
+											WHEN e.payOption LIKE '%coupon%' 
+												THEN -1
+											WHEN e.isHot = 1 
+												THEN IF(e.payOption LIKE '%tumblr%', e.count * (d.hotPrice - 500), e.count * d.hotPrice)
+											WHEN e.isHot = 0 
+												THEN IF(e.payOption LIKE '%tumblr%', e.count * (d.icePrice - 500), e.count * d.icePrice)
+										END)
+										+ IF(e.payOption NOT LIKE '%coupon%' AND e.payOption LIKE '%syrup%', e.count * 500, 0)
+										+ IF(e.payOption NOT LIKE '%coupon%' AND e.payOption LIKE '%shot%', e.count * 500, 0) 
+										AS price
 									FROM
-										(SELECT sum(count) as count, isHot, rcd.payOption FROM SALE_RECORD rcd, DRINK d
-											WHERE STR_TO_DATE(rcd.date, '%Y-%m-%d') BETWEEN STR_TO_DATE(\"_startDate\", '%Y-%m-%d') AND STR_TO_DATE(\"_endDate\", '%Y-%m-%d')
-											AND rcd.isHot = _isHot
-											AND rcd.FK_DRINK_recordID = d.drinkID
-											AND rcd.FK_DRINK_recordID = _drinkID
-											AND rcd.payOption = \"_payOption\") e, DRINK d where d.drinkID = _drinkID`;
+								(SELECT sum(count) as count, isHot, rcd.payOption, rcd.payType FROM SALE_RECORD rcd, DRINK d
+									WHERE STR_TO_DATE(rcd.date, '%Y-%m-%d') BETWEEN STR_TO_DATE('_startDate', '%Y-%m-%d') AND STR_TO_DATE('_endDate', '%Y-%m-%d')
+									AND rcd.isHot = _isHot
+									AND rcd.FK_DRINK_recordID = d.drinkID
+									AND rcd.FK_DRINK_recordID = _drinkID
+									AND rcd.payType = _payType
+								GROUP BY rcd.payOption) e, DRINK d where d.drinkID = _drinkID;`;
 
 const QUERY_GET_ALL_DRINK_PK = "SELECT drinkID FROM drink";
 
@@ -728,73 +731,31 @@ app.post('/getSaleRecord',async(req,res) =>{
 		const ID = await conn.query(getPKQuery);
 
 		let records = [];
-		
-		for(let isHot = 0; isHot < 2; isHot++){
-			for(let payOpt = 0; payOpt < 4; payOpt++){
+	
+		for(let payType = 0; payType < 2; payType++){
+			for(let isHot = 0; isHot < 2; isHot++){
 				let query = QUERY_DRINK_SALE_RECORD;
+				query = query.replace("_payType", "" + payType);
+				query = query.replace("_isHot", "" + isHot);
 				query = query.replace("_startDate", startDate);
 				query = query.replace("_endDate", endDate);
-				query = query.replace("_isHot", "" + isHot);
 				
 				let optQuery = query;
 				let finalQuery;
-				switch(payOpt){
-					case 0:			// 일반 결제 옵션
-					
-					optQuery = optQuery.replace("_payOption", "");
-					for(let i = 0; i < ID.length; i++){
-						finalQuery = optQuery.replace("_drinkID", "" + ID[i].drinkID);
-						finalQuery = finalQuery.replace("_drinkID", "" + ID[i].drinkID);
-						const result = await conn.query(finalQuery);
-						records.push(result[0]);
-					}
-					
-					break;
-					case 1:			// tumblr
-					
-					optQuery = optQuery.replace("_payOption", "tumblr ");
-					for(let i = 0; i < ID.length; i++){
-						finalQuery = optQuery.replace("_drinkID", "" + ID[i].drinkID);
-						finalQuery = finalQuery.replace("_drinkID", "" + ID[i].drinkID);
-						const result = await conn.query(finalQuery);
-						result[0].drinkName = "텀블러 " + result[0].drinkName;
-						records.push(result[0]);
-					}
-					
-					
-					break;
-					case 2:			// coupon
-					
-					optQuery = optQuery.replace("_payOption", "coupon ");
-					for(let i = 0; i < ID.length; i++){
-						finalQuery = optQuery.replace("_drinkID", "" + ID[i].drinkID);
-						finalQuery = finalQuery.replace("_drinkID", "" + ID[i].drinkID);
-						const result = await conn.query(finalQuery);
-						records.push(result[0]);
-					}
-					
-					break;
-					case 3:			// tumblr coupon
-					
-					optQuery = optQuery.replace("_payOption", "tumblr coupon ");
-					for(let i = 0; i < ID.length; i++){
-						finalQuery = optQuery.replace("_drinkID", "" + ID[i].drinkID);
-						finalQuery = finalQuery.replace("_drinkID", "" + ID[i].drinkID);
-						const result = await conn.query(finalQuery);
-						result[0].drinkName = "텀블러 " + result[0].drinkName;
-						records.push(result[0]);
-					}
-					
-					
-					break;
-					
+				for(let i = 0; i < ID.length; i++){
+					finalQuery = optQuery.replace("_drinkID", "" + ID[i].drinkID);
+					finalQuery = finalQuery.replace("_drinkID", "" + ID[i].drinkID);
+					const result = await conn.query(finalQuery);
+					for(let k = 0; k < result.length; k++)
+						records.push(result[k]);
 				}
+				
 			}
 		}
 	
 		records = records.filter(record => record.price != null);
 		res.json(records);
-		//console.log(records);
+		console.log(records);
 		
 		
 	}catch(err){
@@ -812,22 +773,20 @@ const QUERY_GET_RAW_SALE_RECORD = `SELECT
 		rec.saleID,
 		rec.count,
 		rec.payOption,
+		rec.payType,
 		rec.isHot,
 		d.drinkName,
-		CAST((case 
-			when(rec.payOption LIKE "%coupon%")
-				then -1
-				
-			when(isHot=1)
-				then if (rec.payOption LIKE "%tumblr%",
-					count * (d.hotPrice - 500),		/*if*/
-					count * d.hotPrice)				/*else*/
-			
-			when(isHot=0)
-				then if (rec.payOption LIKE "%tumblr%",
-					count * (d.icePrice - 500),		/*if*/
-					count * d.icePrice)				/*else*/
-			END) AS CHAR) as price
+		CAST(((CASE 
+				WHEN rec.payOption LIKE '%coupon%' 
+					THEN -1
+				WHEN rec.isHot = 1 
+					THEN IF(rec.payOption LIKE '%tumblr%', rec.count * (d.hotPrice - 500), rec.count * d.hotPrice)
+				WHEN rec.isHot = 0 
+					THEN IF(rec.payOption LIKE '%tumblr%', rec.count * (d.icePrice - 500), rec.count * d.icePrice)
+			END)
+			+ IF(rec.payOption NOT LIKE '%coupon%' AND rec.payOption LIKE '%syrup%', rec.count * 500, 0)
+			+ IF(rec.payOption NOT LIKE '%coupon%' AND rec.payOption LIKE '%shot%', rec.count * 500, 0) 
+			) AS CHAR) as price
 		FROM SALE_RECORD rec,
 		DRINK d
 		WHERE

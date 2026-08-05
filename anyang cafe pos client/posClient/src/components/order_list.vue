@@ -17,7 +17,10 @@
                             </p>
                             <p v-else>가격 : {{ order.price }}</p>
                             <p>메모 : {{ order.memo }}</p>
-                        
+                            <p v-if="order.isCash"
+                            > 현금결제</p>
+                            <p v-else
+                            > 계좌이체</p>
                             </div>
                             <v-btn @click="DeleteOrder(index)">
                                 삭제
@@ -83,6 +86,7 @@ export default{
                     msg:"",
                     price:0,
                 };
+
                 if(this.orderList[i].payOpt.includes('tumblr'))
                     order.msg += "텀블러 ";
                 
@@ -92,7 +96,15 @@ export default{
                 else 
                     order.msg += "Ice ";
 
-                order.msg += this.orderList[i].drinkName + " ";
+                order.msg += this.orderList[i].drinkName;
+
+                if(this.orderList[i].payOpt.includes('shot'))
+                    order.msg += "(샷 추가) ";
+
+                if(this.orderList[i].payOpt.includes('syrup'))
+                    order.msg += "(시럽 추가)";
+
+                order.msg += " ";
                 order.msg += this.orderList[i].cupCount + "잔";
                 
                 if(this.orderList[i].payOpt.includes('coupon'))
@@ -101,6 +113,7 @@ export default{
                     order.price = this.orderList[i].price;
 
                 order.memo = this.orderList[i].drinkOpt;
+                order.isCash = this.orderList[i].isCash;
 
                 this.orderItemInfo.push(order);     // emit 되는 object
                 this.totalPrice += this.orderList[i].price;

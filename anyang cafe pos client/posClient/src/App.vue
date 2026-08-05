@@ -166,11 +166,11 @@ export default{
       this.confirmDialog = true;
     },
     ConfirmOrder(){
+        console.log(this.orderList);
         this.ws.send(JSON.stringify({
             type:'order',
             order:this.orderList
         }));
-        //console.log(this.orderList);
         this.orderList.length = 0;
         this.orderListChanged = !this.orderListChanged;
         this.confirmDialog = false;

@@ -5,7 +5,7 @@ const pool = DBHandle.createPool({
     user:"",
     password:"",
     database:"",
-    port:,
+    port:3306,
     connectionLimit:5
 });
 

@@ -151,6 +151,7 @@ export default{
 
             if(this.receivedOrder == null){                             // 서버와 연결하여 최초로 데이터를 받아올 때
                 const data = JSON.parse(order.data);
+                console.log(`data : ${order.data}`)
                 if(Array.isArray(data) == false)                        // 단일 오브젝트만 받았을 경우
                     this.receivedOrder = [data];                        // 리스트 형식으로 강제한다.
 

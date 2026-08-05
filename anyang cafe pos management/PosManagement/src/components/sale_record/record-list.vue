@@ -1,7 +1,14 @@
 <template>
     <div
         class="total-price"
-    >총 {{ totalPrice }}원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ totalCupCount }}잔</div>
+    >
+    현금 {{ totalPriceCash }}원
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    계좌 {{ totalPriceAccount }}원
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    총 {{ totalPrice }}원
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {{ totalCupCount }}잔</div>
 <!-- " -->
     <div style="height:100vh;" id="record-list" class="record-list">
         <div class="scroll-list" ref="list">
@@ -60,6 +67,8 @@ export default{
     data(){
         return{
             recordList:this.record,
+            totalPriceCash:0,
+            totalPriceAccount:0,
             totalPrice:0,
             totalCupCount:0,
         }
@@ -89,8 +98,15 @@ export default{
                     this.totalCupCount += parseInt(this.recordList[i].count);
                     if(this.recordList[i].price == "-1")                // -1은 쿠폰
                         continue;
-                    else
+                    else{
+                        if(this.recordList[i].payType == 0)
+                            this.totalPriceCash += parseInt(this.recordList[i].price);
+                        else 
+                            this.totalPriceAccount += parseInt(this.recordList[i].price);
+
                         this.totalPrice += parseInt(this.recordList[i].price);
+                    }
+                        
                 }
             },
 
