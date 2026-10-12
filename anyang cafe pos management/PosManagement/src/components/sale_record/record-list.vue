@@ -92,7 +92,10 @@ export default{
         GetTotalPrice(){
                 this.totalPrice = 0;
                 this.totalCupCount = 0;
-                console.log(this.recordList);
+                this.totalPriceCash = 0;
+                this.totalPriceAccount = 0;
+
+                // console.log(this.recordList);
 
                 for(let i = 0; i < this.recordList.length; i++){
                     this.totalCupCount += parseInt(this.recordList[i].count);
